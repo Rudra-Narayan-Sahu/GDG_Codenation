@@ -28,7 +28,7 @@ const NotesPage = () => {
         const token = localStorage.getItem('token');
         const headers = { Authorization: `Bearer ${token}` };
         try {
-            let url = 'http://localhost:5000/api/notes';
+            let url = `${import.meta.env.VITE_API_URL}/api/notes`;
             if (selectedTopic) {
                 url += `?topic=${encodeURIComponent(selectedTopic)}`;
             }
@@ -47,7 +47,7 @@ const NotesPage = () => {
         const token = localStorage.getItem('token');
         const headers = { Authorization: `Bearer ${token}` };
         try {
-            let url = `http://localhost:5000/api/notes?search=${encodeURIComponent(searchQuery)}`;
+            let url = `${import.meta.env.VITE_API_URL}/api/notes?search=${encodeURIComponent(searchQuery)}`;
             if (selectedTopic) {
                 url += `&topic=${encodeURIComponent(selectedTopic)}`;
             }
@@ -63,7 +63,7 @@ const NotesPage = () => {
     if (downloadingUrl) {
         return <Loader onComplete={() => {
             const link = document.createElement('a');
-            link.href = `http://localhost:5000${downloadingUrl}`;
+            link.href = `${import.meta.env.VITE_API_URL}${downloadingUrl}`;
             link.target = '_blank';
             link.click();
             setDownloadingUrl(null);

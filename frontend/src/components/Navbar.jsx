@@ -66,7 +66,7 @@ const Navbar = () => {
                         <Link to="/profile" className="flex items-center space-x-2 text-gray-400 font-mono text-xs tracking-widest uppercase hover:text-[#07fc03] border-b border-transparent hover:border-[#07fc03] pb-1 smooth-transition">
                             {user.profile_image_url ? (
                                 <img 
-                                    src={user.profile_image_url.startsWith('http') ? user.profile_image_url : `http://localhost:5000${user.profile_image_url}`} 
+                                    src={user.profile_image_url.startsWith('http') ? user.profile_image_url : `${import.meta.env.VITE_API_URL}${user.profile_image_url}`} 
                                     alt="Avatar" 
                                     className="w-5 h-5 rounded-sm object-cover border border-[#07fc03]/50" 
                                 />

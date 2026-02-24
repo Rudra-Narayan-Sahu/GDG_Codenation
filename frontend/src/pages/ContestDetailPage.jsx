@@ -22,13 +22,13 @@ const ContestDetailPage = () => {
                 const tk = token || localStorage.getItem('token');
                 if (!tk) return;
                 
-                const res = await axios.get(`http://localhost:5000/api/contests/${id}`, {
+                const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/contests/${id}`, {
                     headers: { Authorization: `Bearer ${tk}` }
                 });
                 setContest(res.data);
                 
                 // Fetch Leaderboard
-                const lbRes = await axios.get(`http://localhost:5000/api/contests/${id}/leaderboard`, {
+                const lbRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/contests/${id}/leaderboard`, {
                     headers: { Authorization: `Bearer ${tk}` }
                 });
                 setLeaderboard(lbRes.data);
@@ -77,12 +77,12 @@ const ContestDetailPage = () => {
         setJoinMessage('');
         try {
             const tk = token || localStorage.getItem('token');
-            await axios.post(`http://localhost:5000/api/contests/${id}/join`, {}, {
+            await axios.post(`${import.meta.env.VITE_API_URL}/api/contests/${id}/join`, {}, {
                 headers: { Authorization: `Bearer ${tk}` }
             });
             setJoinMessage('Successfully Joined! You appear on the roster.');
             // Refresh Leaderboard to show user at 0
-            const lbRes = await axios.get(`http://localhost:5000/api/contests/${id}/leaderboard`, {
+            const lbRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/contests/${id}/leaderboard`, {
                 headers: { Authorization: `Bearer ${tk}` }
             });
             setLeaderboard(lbRes.data);

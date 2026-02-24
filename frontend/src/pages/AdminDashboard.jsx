@@ -28,13 +28,13 @@ const AdminDashboard = () => {
         const headers = { Authorization: `Bearer ${token}` };
         try {
             if (activeTab === 'problems') {
-                const res = await axios.get('http://localhost:5000/api/problems', { headers });
+                const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/problems`, { headers });
                 setProblems(res.data);
             } else if (activeTab === 'submissions') {
-                const res = await axios.get('http://localhost:5000/api/submissions/all', { headers });
+                const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/submissions/all`, { headers });
                 setSubmissions(res.data);
             } else if (activeTab === 'notes') {
-                const res = await axios.get('http://localhost:5000/api/notes', { headers });
+                const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/notes`, { headers });
                 setNotes(res.data);
             }
         } catch (error) {
@@ -48,14 +48,14 @@ const AdminDashboard = () => {
         const token = localStorage.getItem('token');
         try {
             if (isEditing) {
-                await axios.put(`http://localhost:5000/api/problems/${editProblemId}`, formData, {
+                await axios.put(`${import.meta.env.VITE_API_URL}/api/problems/${editProblemId}`, formData, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setMessage('Problem updated successfully!');
                 setIsEditing(false);
                 setEditProblemId(null);
             } else {
-                await axios.post('http://localhost:5000/api/problems', formData, {
+                await axios.post(`${import.meta.env.VITE_API_URL}/api/problems`, formData, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setMessage('Problem created successfully!');
@@ -71,7 +71,7 @@ const AdminDashboard = () => {
         setMessage('');
         const token = localStorage.getItem('token');
         try {
-            const res = await axios.get(`http://localhost:5000/api/problems/${id}`, {
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/problems/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const problem = res.data;
@@ -97,7 +97,7 @@ const AdminDashboard = () => {
         setMessage('');
         const token = localStorage.getItem('token');
         try {
-            await axios.delete(`http://localhost:5000/api/problems/${id}`, {
+            await axios.delete(`${import.meta.env.VITE_API_URL}/api/problems/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setMessage('Problem deleted successfully!');
@@ -115,7 +115,7 @@ const AdminDashboard = () => {
         setMessage('');
         const token = localStorage.getItem('token');
         try {
-            await axios.post(`http://localhost:5000/api/problems/${testCaseData.problem_id}/testcases`, testCaseData, {
+            await axios.post(`${import.meta.env.VITE_API_URL}/api/problems/${testCaseData.problem_id}/testcases`, testCaseData, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setMessage('Test case added successfully!');
@@ -140,7 +140,7 @@ const AdminDashboard = () => {
 
         try {
             if (isEditingNote) {
-                await axios.put(`http://localhost:5000/api/notes/${editNoteId}`, form, {
+                await axios.put(`${import.meta.env.VITE_API_URL}/api/notes/${editNoteId}`, form, {
                     headers: { 
                         Authorization: `Bearer ${token}`,
                         'Content-Type': 'multipart/form-data'
@@ -150,7 +150,7 @@ const AdminDashboard = () => {
                 setIsEditingNote(false);
                 setEditNoteId(null);
             } else {
-                await axios.post('http://localhost:5000/api/notes', form, {
+                await axios.post(`${import.meta.env.VITE_API_URL}/api/notes`, form, {
                     headers: { 
                         Authorization: `Bearer ${token}`,
                         'Content-Type': 'multipart/form-data'
@@ -169,7 +169,7 @@ const AdminDashboard = () => {
         setMessage('');
         const token = localStorage.getItem('token');
         try {
-            const res = await axios.get(`http://localhost:5000/api/notes/${id}`, {
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/notes/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const note = res.data;
@@ -194,7 +194,7 @@ const AdminDashboard = () => {
         setMessage('');
         const token = localStorage.getItem('token');
         try {
-            await axios.delete(`http://localhost:5000/api/notes/${id}`, {
+            await axios.delete(`${import.meta.env.VITE_API_URL}/api/notes/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setMessage('Note deleted successfully!');
@@ -211,7 +211,7 @@ const AdminDashboard = () => {
         setMessage('');
         const token = localStorage.getItem('token');
         try {
-            await axios.put(`http://localhost:5000/api/problems/${id}/daily`, {}, {
+            await axios.put(`${import.meta.env.VITE_API_URL}/api/problems/${id}/daily`, {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setMessage('Problem set as Daily Challenge successfully!');
@@ -226,7 +226,7 @@ const AdminDashboard = () => {
         setMessage('');
         const token = localStorage.getItem('token');
         try {
-            await axios.put(`http://localhost:5000/api/submissions/${id}/status`, { status }, {
+            await axios.put(`${import.meta.env.VITE_API_URL}/api/submissions/${id}/status`, { status }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setMessage(`Submission #${id} marked as ${status}`);
@@ -509,7 +509,7 @@ const AdminDashboard = () => {
                                         <div>
                                             <h3 className="text-[#07fc03] font-bold">{note.title}</h3>
                                             <span className="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded mt-1 inline-block">{note.topic}</span>
-                                            {note.file_url && <a href={`http://localhost:5000${note.file_url}`} target="_blank" rel="noreferrer" className="block text-xs text-blue-400 hover:text-blue-300 mt-1 uppercase tracking-wider font-mono">View File</a>}
+                                            {note.file_url && <a href={`${import.meta.env.VITE_API_URL}${note.file_url}`} target="_blank" rel="noreferrer" className="block text-xs text-blue-400 hover:text-blue-300 mt-1 uppercase tracking-wider font-mono">View File</a>}
                                         </div>
                                         <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
                                             <button 

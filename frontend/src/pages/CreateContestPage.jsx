@@ -29,7 +29,7 @@ const CreateContestPage = () => {
 
         const fetchProblems = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/problems', {
+                const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/problems`, {
                     headers: { Authorization: `Bearer ${token || localStorage.getItem('token')}` }
                 });
                 setAllProblems(res.data);
@@ -83,7 +83,7 @@ const CreateContestPage = () => {
                 problems: selectedProblems.map(p => ({ id: p.id, points: p.points }))
             };
 
-            await axios.post('http://localhost:5000/api/contests', payload, {
+            await axios.post(`${import.meta.env.VITE_API_URL}/api/contests`, payload, {
                 headers: { Authorization: `Bearer ${tk}` }
             });
 

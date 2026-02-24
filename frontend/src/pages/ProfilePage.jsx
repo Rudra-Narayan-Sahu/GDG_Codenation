@@ -26,7 +26,7 @@ const ProfilePage = () => {
         const fetchProfileData = async () => {
             try {
                 // Fetch submission history to calculate stats
-                const res = await axios.get('http://localhost:5000/api/submissions/history', {
+                const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/submissions/history`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 
@@ -81,7 +81,7 @@ const ProfilePage = () => {
         if (user) {
              fetchProfileData();
              setEditName(user.name);
-             setEditImagePreview(user.profile_image_url ? `http://localhost:5000${user.profile_image_url}` : '');
+             setEditImagePreview(user.profile_image_url ? `${import.meta.env.VITE_API_URL}${user.profile_image_url}` : '');
         }
     }, [user, token]);
 
@@ -103,7 +103,7 @@ const ProfilePage = () => {
                 formData.append('profile_image', editImageFile);
             }
 
-            const res = await axios.put('http://localhost:5000/api/auth/profile', 
+            const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/auth/profile`, 
                 formData,
                 { 
                     headers: { 
@@ -179,7 +179,7 @@ const ProfilePage = () => {
                                 <img src={editImagePreview} alt="Preview" className="w-full h-full object-cover" />
                             ) : user?.profile_image_url ? (
                                 <img 
-                                    src={user.profile_image_url.startsWith('http') ? user.profile_image_url : `http://localhost:5000${user.profile_image_url}`} 
+                                    src={user.profile_image_url.startsWith('http') ? user.profile_image_url : `${import.meta.env.VITE_API_URL}${user.profile_image_url}`} 
                                     alt="Profile" 
                                     className="w-full h-full object-cover" 
                                 />
@@ -220,7 +220,7 @@ const ProfilePage = () => {
                                                 setEditMode(false);
                                                 setEditName(user?.name || '');
                                                 setEditImageFile(null);
-                                                setEditImagePreview(user?.profile_image_url ? `http://localhost:5000${user?.profile_image_url}` : '');
+                                                setEditImagePreview(user?.profile_image_url ? `${import.meta.env.VITE_API_URL}${user?.profile_image_url}` : '');
                                             }}
                                             className="bg-transparent border border-red-500 text-red-500 hover:bg-red-500/10 px-4 py-1 text-xs font-bold uppercase transition-colors"
                                         >

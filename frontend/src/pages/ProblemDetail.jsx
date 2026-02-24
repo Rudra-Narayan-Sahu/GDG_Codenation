@@ -25,7 +25,7 @@ const ProblemDetail = () => {
     useEffect(() => {
         const fetchProblem = async () => {
             try {
-                const res = await axios.get(`http://localhost:5000/api/problems/${id}`);
+                const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/problems/${id}`);
                 setProblem(res.data);
             } catch (error) {
                 console.error("Error fetching problem", error);
@@ -57,7 +57,7 @@ const ProblemDetail = () => {
             if (contestId) {
                 payload.contestId = contestId;
             }
-            const res = await axios.post('http://localhost:5000/api/submissions', 
+            const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/submissions`, 
                 payload,
                 { headers: { Authorization: `Bearer ${token}` } }
             );

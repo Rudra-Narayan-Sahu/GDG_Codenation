@@ -15,7 +15,7 @@ const ContestsPage = () => {
             try {
                 const token = localStorage.getItem('token');
                 if (!token) return;
-                const res = await axios.get('http://localhost:5000/api/contests', {
+                const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/contests`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setContests(res.data);

@@ -14,14 +14,14 @@ const ProblemsPage = () => {
             try {
                 const token = localStorage.getItem('token');
                 const headers = { Authorization: `Bearer ${token}` };
-                const endpoint = 'http://localhost:5000/api/problems/user-status';
+                const endpoint = `${import.meta.env.VITE_API_URL}/api/problems/user-status`;
                 const res = await axios.get(endpoint, { headers });
                 setProblems(res.data);
             } catch (error) {
                 console.error("Error fetching problems", error);
                 // Fallback to public list if authenticated fails somehow
                 try {
-                     const res = await axios.get('http://localhost:5000/api/problems');
+                     const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/problems`);
                      setProblems(res.data);
                 } catch(e) {}
             } finally {
