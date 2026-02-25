@@ -24,15 +24,13 @@ const HomePage = () => {
                     <div className="absolute top-6 left-6 text-gray-500 text-xs hidden md:block">
                         <div className="flex items-center space-x-2">
                             <span className="w-4 h-4 rounded-full border border-gray-500 flex items-center justify-center text-[8px]">┼</span>
-                            <span>SYS.INIT</span>
+                            
                         </div>
                     </div>
 
                     {/* Top right pseudo-data */}
                     <div className="absolute top-6 right-8 text-gray-500 text-xs hidden md:block tracking-widest opacity-50">
-                        XXXXX 
-                        <br/>
-                        <span>SECURE</span>
+                       
                     </div>
 
                     <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight uppercase mt-12 md:mt-8">
