@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { Trophy, Clock, PlayCircle, Plus } from 'lucide-react';
+import { Trophy, Clock, PlayCircle, Plus, Users } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import Loader from '../components/Loader';
 
@@ -62,6 +62,10 @@ const ContestsPage = () => {
                     <div className="flex items-center space-x-2">
                         <Clock size={16} className="text-[#07fc03]/50" />
                         <span>{new Date(contest.start_time).toLocaleString()}</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                        <Users size={16} className="text-[#07fc03]/50" />
+                        <span>{contest.participants_count || 0} Registered</span>
                     </div>
                 </div>
                 <div className="mt-6">

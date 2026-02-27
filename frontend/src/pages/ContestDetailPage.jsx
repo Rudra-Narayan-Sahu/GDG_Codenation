@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import { Clock, Users, Trophy, PlayCircle, Loader2 } from 'lucide-react';
@@ -7,6 +7,7 @@ import Loader from '../components/Loader';
 
 const ContestDetailPage = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
     const { user, token } = useContext(AuthContext);
     const [contest, setContest] = useState(null);
     const [leaderboard, setLeaderboard] = useState([]);
@@ -143,6 +144,16 @@ const ContestDetailPage = () => {
                                 </span>
                             </div>
                             <p className="text-gray-400 mt-4 max-w-2xl leading-relaxed">{contest.description}</p>
+                            <div className="flex items-center gap-6 mt-4 text-gray-400 text-sm">
+                                <div className="flex items-center gap-2">
+                                    <Clock size={16} className="text-[#07fc03]/50" />
+                                    <span>{new Date(contest.start_time).toLocaleString()} - {new Date(contest.end_time).toLocaleString()}</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Users size={16} className="text-[#07fc03]/50" />
+                                    <span>{contest.participants_count || 0} Registered Users</span>
+                                </div>
+                            </div>
                         </div>
                         
                         <div className="mt-6 md:mt-0 flex flex-col items-end gap-3">
@@ -160,6 +171,34 @@ const ContestDetailPage = () => {
                                          {sendingReminder ? 'SENDING EMAILS...' : 'ADMIN: SEND REMINDER (EMAIL)'}
                                      </button>
                                      {reminderMessage && <span className="text-xs text-red-400 mt-1">{reminderMessage}</span>}
+                                </div>
+                            )}
+                            
+                            {user && user.role === 'Admin' && (
+                                <div className="flex flex-row items-end gap-2 mt-2">
+                                     <Link 
+                                        to={`/contests/${contest.id}/edit`}
+                                        className="text-xs bg-blue-900/50 hover:bg-blue-800 text-blue-200 border border-blue-500 py-1 px-3 rounded transition-all uppercase tracking-widest"
+                                     >
+                                         EDIT CONTEST
+                                     </Link>
+                                     <button 
+                                        onClick={async () => {
+                                            if (!window.confirm("Are you sure you want to delete this contest? All related data will be lost.")) return;
+                                            try {
+                                                const tk = token || localStorage.getItem('token');
+                                                await axios.delete(`${import.meta.env.VITE_API_URL}/api/contests/${contest.id}`, {
+                                                    headers: { Authorization: `Bearer ${tk}` }
+                                                });
+                                                navigate('/contests');
+                                            } catch (err) {
+                                                alert(err.response?.data?.message || 'Failed to delete contest');
+                                            }
+                                        }}
+                                        className="text-xs bg-gray-900/50 hover:bg-red-900 text-red-500 hover:text-white border border-red-900 hover:border-red-500 py-1 px-3 rounded transition-all uppercase tracking-widest"
+                                     >
+                                         DELETE
+                                     </button>
                                 </div>
                             )}
                         </div>
@@ -207,7 +246,7 @@ const ContestDetailPage = () => {
                         {contest.problems && contest.problems.length > 0 ? (
                             contest.problems.map((p, idx) => (
                                 <Link 
-                                    to={`/problems/${p.id}?contestId=${contest.id}`} 
+                                    to={`/problem/${p.id}?contestId=${contest.id}`} 
                                     key={p.id}
                                     className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-[#0a0a0a] border border-[#07fc03]/20 hover:border-[#07fc03]/80 p-4 sm:p-5 rounded-lg smooth-transition group gap-4 sm:gap-0"
                                 >

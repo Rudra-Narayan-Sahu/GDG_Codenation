@@ -11,6 +11,7 @@ import ProfilePage from './pages/ProfilePage';
 import NotesPage from './pages/NotesPage';
 import ContestsPage from './pages/ContestsPage';
 import CreateContestPage from './pages/CreateContestPage';
+import EditContestPage from './pages/EditContestPage';
 import ContestDetailPage from './pages/ContestDetailPage';
 import Navbar from './components/Navbar';
 import Loader from './components/Loader';
@@ -93,6 +94,14 @@ function App() {
               element={
                 <ProtectedRoute adminOnly={true}>
                   <CreateContestPage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/contests/:id/edit" 
+              element={
+                <ProtectedRoute adminOnly={true}>
+                  <EditContestPage />
                 </ProtectedRoute>
               } 
             />

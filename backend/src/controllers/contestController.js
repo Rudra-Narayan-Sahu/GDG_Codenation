@@ -5,7 +5,7 @@ const sendEmail = require('../utils/sendEmail');
 // @access  Public or User
 exports.getContests = async (req, res) => {
     try {
-        const [contests] = await pool.query('SELECT * FROM contests ORDER BY start_time DESC');
+        const [contests] = await pool.query('SELECT *, (SELECT COUNT(*) FROM contest_participants WHERE contest_id = contests.id) as participants_count FROM contests ORDER BY start_time DESC');
         res.status(200).json(contests);
     } catch (error) {
         console.error("Error fetching contests:", error);
@@ -18,7 +18,7 @@ exports.getContests = async (req, res) => {
 // @access  Public or User
 exports.getContestById = async (req, res) => {
     try {
-        const [contests] = await pool.query('SELECT * FROM contests WHERE id = ?', [req.params.id]);
+        const [contests] = await pool.query('SELECT *, (SELECT COUNT(*) FROM contest_participants WHERE contest_id = contests.id) as participants_count FROM contests WHERE id = ?', [req.params.id]);
         
         if (contests.length === 0) {
             return res.status(404).json({ message: 'Contest not found' });
@@ -206,6 +206,66 @@ exports.sendContestReminder = async (req, res) => {
 
     } catch (error) {
         console.error("Error sending reminders:", error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
+// @desc    Update a contest
+// @route   PUT /api/contests/:id
+// @access  Admin
+exports.updateContest = async (req, res) => {
+    try {
+        const { title, description, start_time, end_time, problems } = req.body;
+        const contestId = req.params.id;
+
+        // Update contest details
+        await pool.query(
+            'UPDATE contests SET title = ?, description = ?, start_time = ?, end_time = ? WHERE id = ?',
+            [title, description, start_time, end_time, contestId]
+        );
+
+        // Update problems if provided
+        if (problems && Array.isArray(problems)) {
+            // Delete existing problems
+            await pool.query('DELETE FROM contest_problems WHERE contest_id = ?', [contestId]);
+            
+            // Insert new problems
+            for (const prob of problems) {
+                await pool.query(
+                    'INSERT INTO contest_problems (contest_id, problem_id, points) VALUES (?, ?, ?)',
+                    [contestId, prob.id, prob.points || 100]
+                );
+            }
+        }
+
+        res.status(200).json({ message: 'Contest updated successfully' });
+    } catch (error) {
+        console.error("Error updating contest:", error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
+// @desc    Delete a contest
+// @route   DELETE /api/contests/:id
+// @access  Admin
+exports.deleteContest = async (req, res) => {
+    try {
+        const contestId = req.params.id;
+        
+        // Delete related data first
+        await pool.query('DELETE FROM contest_participants WHERE contest_id = ?', [contestId]);
+        await pool.query('DELETE FROM contest_problems WHERE contest_id = ?', [contestId]);
+        
+        // Delete contest
+        const [result] = await pool.query('DELETE FROM contests WHERE id = ?', [contestId]);
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Contest not found' });
+        }
+
+        res.status(200).json({ message: 'Contest deleted successfully' });
+    } catch (error) {
+        console.error("Error deleting contest:", error);
         res.status(500).json({ message: 'Server Error' });
     }
 };

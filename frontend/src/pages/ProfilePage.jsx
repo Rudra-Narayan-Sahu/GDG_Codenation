@@ -350,8 +350,8 @@ const ProfilePage = () => {
                                         <span>{new Date(sub.submitted_at).toLocaleDateString()}</span>
                                     </div>
                                 </div>
-                                <div className={`text-sm font-bold ${sub.status === 'Accepted' ? 'text-[#07fc03]' : 'text-[#FFFF00]'}`}>
-                                    [{sub.status === 'Accepted' ? 'PASS' : 'PENDING'}]
+                                <div className={`text-sm font-bold ${sub.status === 'Accepted' ? 'text-[#07fc03]' : sub.status === 'Pending' ? 'text-[#FFFF00]' : 'text-red-500'}`}>
+                                    [{sub.status === 'Accepted' ? 'PASS' : sub.status.toUpperCase()}]
                                 </div>
                             </div>
                         ))}
