@@ -1,4 +1,88 @@
 
+--- SCHEMA FOR contest_participants ---
+[
+  {
+    "Field": "contest_id",
+    "Type": "int",
+    "Null": "NO"
+  },
+  {
+    "Field": "user_id",
+    "Type": "int",
+    "Null": "NO"
+  },
+  {
+    "Field": "joined_at",
+    "Type": "timestamp",
+    "Null": "YES"
+  },
+  {
+    "Field": "score",
+    "Type": "int",
+    "Null": "YES"
+  },
+  {
+    "Field": "penalty",
+    "Type": "int",
+    "Null": "YES"
+  }
+]
+--- SCHEMA FOR contest_problems ---
+[
+  {
+    "Field": "contest_id",
+    "Type": "int",
+    "Null": "NO"
+  },
+  {
+    "Field": "problem_id",
+    "Type": "int",
+    "Null": "NO"
+  },
+  {
+    "Field": "points",
+    "Type": "int",
+    "Null": "YES"
+  }
+]
+--- SCHEMA FOR contests ---
+[
+  {
+    "Field": "id",
+    "Type": "int",
+    "Null": "NO"
+  },
+  {
+    "Field": "title",
+    "Type": "varchar(255)",
+    "Null": "NO"
+  },
+  {
+    "Field": "description",
+    "Type": "text",
+    "Null": "YES"
+  },
+  {
+    "Field": "start_time",
+    "Type": "timestamp",
+    "Null": "NO"
+  },
+  {
+    "Field": "end_time",
+    "Type": "timestamp",
+    "Null": "NO"
+  },
+  {
+    "Field": "created_by",
+    "Type": "int",
+    "Null": "YES"
+  },
+  {
+    "Field": "created_at",
+    "Type": "timestamp",
+    "Null": "YES"
+  }
+]
 --- SCHEMA FOR notes ---
 [
   {
@@ -116,6 +200,11 @@
     "Field": "submitted_at",
     "Type": "timestamp",
     "Null": "YES"
+  },
+  {
+    "Field": "contest_id",
+    "Type": "int",
+    "Null": "YES"
   }
 ]
 --- SCHEMA FOR test_cases ---
@@ -181,6 +270,11 @@
   {
     "Field": "profile_image_url",
     "Type": "varchar(500)",
+    "Null": "YES"
+  },
+  {
+    "Field": "is_blocked",
+    "Type": "tinyint(1)",
     "Null": "YES"
   }
 ]
