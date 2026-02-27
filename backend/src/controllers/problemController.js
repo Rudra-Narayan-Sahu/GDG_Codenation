@@ -3,10 +3,10 @@ const pool = require('../config/db');
 // @desc    Create a problem (Admin)
 exports.createProblem = async (req, res) => {
     try {
-        const { title, description, difficulty } = req.body;
+        const { title, description, difficulty, topics } = req.body;
         const [result] = await pool.query(
-            'INSERT INTO problems (title, description, difficulty, created_by) VALUES (?, ?, ?, ?)',
-            [title, description, difficulty, req.user.id]
+            'INSERT INTO problems (title, description, difficulty, topics, created_by) VALUES (?, ?, ?, ?, ?)',
+            [title, description, difficulty, topics || '', req.user.id]
         );
         res.status(201).json({ message: 'Problem created successfully', problemId: result.insertId });
     } catch (error) {
@@ -18,7 +18,7 @@ exports.createProblem = async (req, res) => {
 // @desc    Get all problems (User/Admin)
 exports.getProblems = async (req, res) => {
     try {
-        const [problems] = await pool.query('SELECT id, title, difficulty, created_at FROM problems');
+        const [problems] = await pool.query('SELECT id, title, difficulty, topics, created_at FROM problems');
         res.status(200).json(problems);
     } catch (error) {
         console.error(error);
@@ -45,11 +45,11 @@ exports.getProblemById = async (req, res) => {
 exports.updateProblem = async (req, res) => {
     try {
         const { id } = req.params;
-        const { title, description, difficulty } = req.body;
+        const { title, description, difficulty, topics } = req.body;
         
         const [result] = await pool.query(
-            'UPDATE problems SET title = ?, description = ?, difficulty = ? WHERE id = ?',
-            [title, description, difficulty, id]
+            'UPDATE problems SET title = ?, description = ?, difficulty = ?, topics = ? WHERE id = ?',
+            [title, description, difficulty, topics || '', id]
         );
 
         if (result.affectedRows === 0) {
@@ -145,7 +145,7 @@ exports.getProblemsWithUserStatus = async (req, res) => {
         
         const [problems] = await pool.query(`
             SELECT 
-                p.id, p.title, p.difficulty, p.is_daily, p.created_at,
+                p.id, p.title, p.difficulty, p.topics, p.is_daily, p.created_at,
                 (SELECT COUNT(*) FROM submissions s WHERE s.problem_id = p.id AND s.user_id = ? AND s.status = 'Accepted') as solved_count
             FROM problems p
             ORDER BY p.is_daily DESC, p.created_at DESC

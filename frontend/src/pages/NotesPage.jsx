@@ -182,7 +182,7 @@ const NotesPage = () => {
                                             </button>
                                         )}
                                         <div className="mt-6 pt-4 border-t border-gray-800 flex justify-between items-center text-xs text-gray-500">
-                                            <span>Added: {new Date(note.created_at).toLocaleDateString()}</span>
+                                            <span>Added: {new Date(note.created_at).toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
                                         </div>
                                     </div>
                                 ))

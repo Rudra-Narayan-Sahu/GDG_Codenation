@@ -112,3 +112,14 @@ exports.updateSubmissionStatus = async (req, res) => {
         res.status(500).json({ message: 'Server Error' });
     }
 };
+
+// @desc    Delete all submissions (Admin)
+exports.deleteAllSubmissions = async (req, res) => {
+    try {
+        await pool.query('DELETE FROM submissions');
+        res.status(200).json({ message: 'All submissions cleared successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server Error clearing submissions' });
+    }
+};

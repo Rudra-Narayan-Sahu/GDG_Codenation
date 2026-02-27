@@ -61,7 +61,7 @@ const ContestsPage = () => {
                 <div className="flex items-center text-sm text-gray-500 space-x-6 font-mono">
                     <div className="flex items-center space-x-2">
                         <Clock size={16} className="text-[#07fc03]/50" />
-                        <span>{new Date(contest.start_time).toLocaleString()}</span>
+                        <span>{new Date(contest.start_time).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
                     </div>
                     <div className="flex items-center space-x-2">
                         <Users size={16} className="text-[#07fc03]/50" />

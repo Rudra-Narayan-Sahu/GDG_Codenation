@@ -147,7 +147,7 @@ const ContestDetailPage = () => {
                             <div className="flex items-center gap-6 mt-4 text-gray-400 text-sm">
                                 <div className="flex items-center gap-2">
                                     <Clock size={16} className="text-[#07fc03]/50" />
-                                    <span>{new Date(contest.start_time).toLocaleString()} - {new Date(contest.end_time).toLocaleString()}</span>
+                                    <span>{new Date(contest.start_time).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })} - {new Date(contest.end_time).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Users size={16} className="text-[#07fc03]/50" />

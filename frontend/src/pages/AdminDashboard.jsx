@@ -16,7 +16,7 @@ const AdminDashboard = () => {
     const [sendingReminder, setSendingReminder] = useState(false);
     
     // Form state
-    const [formData, setFormData] = useState({ title: '', description: '', difficulty: 'Easy' });
+    const [formData, setFormData] = useState({ title: '', description: '', difficulty: 'Easy', topics: '' });
     const [testCaseData, setTestCaseData] = useState({ problem_id: '', input: '', expected_output: '', is_hidden: false });
     const [noteData, setNoteData] = useState({ title: '', topic: '', content: '', file: null });
     const [message, setMessage] = useState('');
@@ -72,7 +72,7 @@ const AdminDashboard = () => {
                 });
                 setMessage('Problem created successfully!');
             }
-            setFormData({ title: '', description: '', difficulty: 'Easy' });
+            setFormData({ title: '', description: '', difficulty: 'Easy', topics: '' });
             fetchData();
         } catch (error) {
             setMessage(isEditing ? 'Error updating problem' : 'Error creating problem');
@@ -87,7 +87,7 @@ const AdminDashboard = () => {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const problem = res.data;
-            setFormData({ title: problem.title, description: problem.description, difficulty: problem.difficulty });
+            setFormData({ title: problem.title, description: problem.description, difficulty: problem.difficulty, topics: problem.topics || '' });
             setIsEditing(true);
             setEditProblemId(id);
             // Scroll to top or to the form
@@ -100,7 +100,7 @@ const AdminDashboard = () => {
     const handleCancelEdit = () => {
         setIsEditing(false);
         setEditProblemId(null);
-        setFormData({ title: '', description: '', difficulty: 'Easy' });
+        setFormData({ title: '', description: '', difficulty: 'Easy', topics: '' });
         setMessage('');
     };
 
@@ -248,6 +248,23 @@ const AdminDashboard = () => {
             setMessage('Error updating submission status');
         } finally {
             setStatusUpdating(false);
+        }
+    };
+
+    const handleClearAllSubmissions = async () => {
+        if (!window.confirm('Are you ABSOLUTELY sure you want to delete ALL submissions? This action cannot be undone!')) return;
+        
+        setMessage('');
+        const token = localStorage.getItem('token');
+        try {
+            await axios.delete(`${import.meta.env.VITE_API_URL}/api/submissions/all`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setMessage('All submissions have been successfully cleared!');
+            setExpandedSubmission(null);
+            fetchData();
+        } catch (error) {
+            setMessage('Error clearing submissions');
         }
     };
 
@@ -404,6 +421,10 @@ const AdminDashboard = () => {
                                 <input required type="text" className="w-full bg-gray-900 border border-gray-700 rounded p-2 text-white focus:border-[#07fc03] focus:outline-none transition-colors" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} />
                             </div>
                             <div>
+                                <label className="block text-sm text-gray-400 mb-1">Topics</label>
+                                <input type="text" className="w-full bg-gray-900 border border-gray-700 rounded p-2 text-white focus:border-[#07fc03] focus:outline-none transition-colors" value={formData.topics} onChange={e => setFormData({...formData, topics: e.target.value})} placeholder="e.g. Arrays, Strings, DP" />
+                            </div>
+                            <div>
                                 <label className="block text-sm text-gray-400 mb-1">Difficulty</label>
                                 <select className="w-full bg-gray-900 border border-gray-700 rounded p-2 text-white focus:border-[#07fc03] focus:outline-none transition-colors" value={formData.difficulty} onChange={e => setFormData({...formData, difficulty: e.target.value})}>
                                     <option>Easy</option>
@@ -465,7 +486,10 @@ const AdminDashboard = () => {
                                     <div key={prob.id} className="bg-gray-800/50 p-4 rounded-lg border border-gray-700 flex justify-between items-center">
                                         <div>
                                             <h3 className="text-[#07fc03] font-bold">{prob.title}</h3>
-                                            <span className="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded mt-1 inline-block">{prob.difficulty}</span>
+                                            <div className="flex gap-2 mt-1">
+                                                <span className="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded inline-block">{prob.difficulty}</span>
+                                                {prob.topics && <span className="text-xs bg-gray-700 text-[#07fc03] px-2 py-1 rounded inline-block">{prob.topics}</span>}
+                                            </div>
                                         </div>
                                         <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
                                             <button 
@@ -496,8 +520,19 @@ const AdminDashboard = () => {
             )}
 
             {activeTab === 'submissions' && (
-                <div className="glass rounded-xl overflow-x-auto pb-4">
-                    <div className="min-w-[800px]">
+                <div className="glass rounded-xl overflow-hidden pb-4">
+                    <div className="p-4 flex justify-between items-center bg-gray-900/50 border-b border-gray-700">
+                        <h2 className="text-xl font-bold text-gray-100">All Submissions ({submissions.length})</h2>
+                        <button
+                            onClick={handleClearAllSubmissions}
+                            disabled={submissions.length === 0}
+                            className="bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded shadow-lg smooth-transition font-bold disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                        >
+                            <span>Clear All Submissions</span>
+                        </button>
+                    </div>
+
+                    <div className="overflow-x-auto min-w-[800px]">
                         <table className="w-full text-left">
                             <thead className="bg-gray-800/80 text-gray-300 border-b border-gray-700 text-sm uppercase tracking-wider">
                                 <tr>
@@ -519,7 +554,7 @@ const AdminDashboard = () => {
                                             <td className="px-6 py-4">{s.problem_title}</td>
                                             <td className="px-6 py-4">{s.language}</td>
                                             <td className={`px-6 py-4 ${s.status === 'Accepted' ? 'text-green-400' : s.status === 'Pending' ? 'text-yellow-400' : 'text-red-400'}`}>{s.status}</td>
-                                            <td className="px-6 py-4 text-gray-500 text-sm">{new Date(s.submitted_at).toLocaleString()}</td>
+                                            <td className="px-6 py-4 text-gray-500 text-sm">{new Date(s.submitted_at).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
                                             <td className="px-6 py-4">
                                                 <button 
                                                     onClick={() => setExpandedSubmission(expandedSubmission === s.id ? null : s.id)}
@@ -734,7 +769,7 @@ const AdminDashboard = () => {
                                                     <span className="px-2 py-1 rounded text-xs uppercase tracking-wider bg-green-900/50 text-green-400 border border-green-500/30">Active</span>
                                                 )}
                                             </td>
-                                            <td className="px-6 py-4 text-gray-500 text-sm">{new Date(u.created_at).toLocaleDateString()}</td>
+                                            <td className="px-6 py-4 text-gray-500 text-sm">{new Date(u.created_at).toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
                                             <td className="px-6 py-4">
                                                 <div className="flex space-x-2">
                                                     {u.role !== 'Admin' && (

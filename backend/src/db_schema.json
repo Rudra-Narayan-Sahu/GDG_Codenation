@@ -139,6 +139,11 @@
     "Null": "NO"
   },
   {
+    "Field": "topics",
+    "Type": "varchar(255)",
+    "Null": "YES"
+  },
+  {
     "Field": "created_by",
     "Type": "int",
     "Null": "YES"

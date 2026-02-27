@@ -181,7 +181,7 @@ const ProfilePage = () => {
                     <div 
                         key={`${col}-${row}`} 
                         className={`w-3 h-3 rounded-sm ${intensityClass} border border-[#07fc03]/10`}
-                        title={`${count} submissions on ${new Date(targetDay).toLocaleDateString()}`}
+                        title={`${count} submissions on ${new Date(targetDay).toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata' })}`}
                     ></div>
                 );
             }
@@ -347,7 +347,7 @@ const ProfilePage = () => {
                                     <span className="text-white mb-1 font-bold">{sub.problem_title}</span>
                                     <div className="flex items-center gap-3 text-xs text-gray-500">
                                         <span className="bg-gray-800 px-2 py-0.5 rounded-sm">{sub.language}</span>
-                                        <span>{new Date(sub.submitted_at).toLocaleDateString()}</span>
+                                        <span>{new Date(sub.submitted_at).toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
                                     </div>
                                 </div>
                                 <div className={`text-sm font-bold ${sub.status === 'Accepted' ? 'text-[#07fc03]' : sub.status === 'Pending' ? 'text-[#FFFF00]' : 'text-red-500'}`}>
