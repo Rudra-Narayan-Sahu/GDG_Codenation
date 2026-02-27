@@ -1,9 +1,11 @@
 import { useEffect, useState, useContext } from 'react';
+import { useParams } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 import { Terminal, Activity, Trophy, Code2 } from 'lucide-react';
 
 const ProfilePage = () => {
+    const { id: routeId } = useParams();
     const [editMode, setEditMode] = useState(false);
     const [editName, setEditName] = useState('');
     const [editImageFile, setEditImageFile] = useState(null);
@@ -21,16 +23,31 @@ const ProfilePage = () => {
         submissions: []
     });
     const [loading, setLoading] = useState(true);
+    const [profileUser, setProfileUser] = useState(null);
+    const [errorMsg, setErrorMsg] = useState('');
 
     useEffect(() => {
         const fetchProfileData = async () => {
             try {
-                // Fetch submission history to calculate stats
-                const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/submissions/history`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+                let subs = [];
+                setLoading(true);
+                setErrorMsg('');
                 
-                const subs = res.data;
+                if (routeId) {
+                    // Fetch other user's profile and submissions
+                    const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/users/${routeId}/profile`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    setProfileUser(res.data.user);
+                    subs = res.data.submissions || [];
+                } else {
+                    // Fetch own submissions
+                    setProfileUser(user);
+                    const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/submissions/history`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    subs = res.data;
+                }
                 
                 // Calculate Total Solved (Unique problems with 'Accepted' or 'Pending' status)
                 const acceptedSubs = subs.filter(s => s.status === 'Accepted' || s.status === 'Pending');
@@ -71,19 +88,22 @@ const ProfilePage = () => {
                     currentStreak,
                     submissions: subs
                 });
-                setLoading(false);
             } catch (err) {
                 console.error("Error fetching profile stats", err);
+                setErrorMsg(err.response?.data?.message || "Error loading profile data");
+            } finally {
                 setLoading(false);
             }
         };
 
         if (user) {
              fetchProfileData();
-             setEditName(user.name);
-             setEditImagePreview(user.profile_image_url ? `${import.meta.env.VITE_API_URL}${user.profile_image_url}` : '');
+             if (!routeId) {
+                 setEditName(user.name);
+                 setEditImagePreview(user.profile_image_url ? `${import.meta.env.VITE_API_URL}${user.profile_image_url}` : '');
+             }
         }
-    }, [user, token]);
+    }, [user, token, routeId]);
 
     const handleImageChange = (e) => {
         if (e.target.files && e.target.files[0]) {
@@ -123,6 +143,12 @@ const ProfilePage = () => {
     if (loading) return (
         <div className="flex-grow flex items-center justify-center bg-black font-mono text-[#07fc03]">
             <span className="animate-pulse">Loading Profile Data...</span>
+        </div>
+    );
+
+    if (errorMsg) return (
+        <div className="flex-grow flex items-center justify-center bg-black font-mono text-red-500">
+            <span>{errorMsg}</span>
         </div>
     );
 
@@ -177,9 +203,9 @@ const ProfilePage = () => {
                         <div className="w-24 h-24 bg-black border-2 border-[#07fc03] flex items-center justify-center shadow-[0_0_15px_rgba(7,252,3,0.3)] overflow-hidden shrink-0">
                             {(editMode && editImagePreview) ? (
                                 <img src={editImagePreview} alt="Preview" className="w-full h-full object-cover" />
-                            ) : user?.profile_image_url ? (
+                            ) : profileUser?.profile_image_url ? (
                                 <img 
-                                    src={user.profile_image_url.startsWith('http') ? user.profile_image_url : `${import.meta.env.VITE_API_URL}${user.profile_image_url}`} 
+                                    src={profileUser.profile_image_url.startsWith('http') ? profileUser.profile_image_url : `${import.meta.env.VITE_API_URL}${profileUser.profile_image_url}`} 
                                     alt="Profile" 
                                     className="w-full h-full object-cover" 
                                 />
@@ -232,18 +258,20 @@ const ProfilePage = () => {
                                 <>
                                     <div className="flex justify-between items-start w-full">
                                         <div>
-                                            <h1 className="text-3xl font-bold text-[#07fc03] mb-1">@{user?.name || 'hacker'}</h1>
-                                            <p className="text-sm text-gray-400 mb-2">ACCESS LEVEL: {user?.role?.toUpperCase() || 'USER'}</p>
+                                            <h1 className="text-3xl font-bold text-[#07fc03] mb-1">@{profileUser?.name || 'hacker'}</h1>
+                                            <p className="text-sm text-gray-400 mb-2">ACCESS LEVEL: {profileUser?.role?.toUpperCase() || 'USER'}</p>
                                         </div>
-                                        <button 
-                                            onClick={() => setEditMode(true)}
-                                            className="border border-[#07fc03]/50 text-[#07fc03] hover:bg-[#07fc03]/10 px-3 py-1 text-xs uppercase tracking-wider transition-colors"
-                                        >
-                                            EDIT PROFILE
-                                        </button>
+                                        {!routeId && (
+                                            <button 
+                                                onClick={() => setEditMode(true)}
+                                                className="border border-[#07fc03]/50 text-[#07fc03] hover:bg-[#07fc03]/10 px-3 py-1 text-xs uppercase tracking-wider transition-colors"
+                                            >
+                                                EDIT PROFILE
+                                            </button>
+                                        )}
                                     </div>
                                     <div className="text-xs bg-black px-2 py-1 border border-gray-800 inline-block text-gray-500">
-                                        STATUS: ONLINE
+                                        STATUS: {routeId ? 'OFFLINE' : 'ONLINE'}
                                     </div>
                                 </>
                             )}

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 const AdminDashboard = () => {
@@ -715,7 +716,9 @@ const AdminDashboard = () => {
                                                     ) : (
                                                         <div className="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center text-xs font-bold">{u.name.charAt(0).toUpperCase()}</div>
                                                     )}
-                                                    <span className="font-bold text-white">{u.name}</span>
+                                                    <Link to={`/user/${u.id}`} className="font-bold text-white hover:text-[#07fc03] transition-colors">
+                                                        {u.name}
+                                                    </Link>
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4 text-gray-400">{u.email}</td>

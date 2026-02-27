@@ -73,6 +73,14 @@ function App() {
               } 
             />
             <Route 
+              path="/user/:id" 
+              element={
+                <ProtectedRoute>
+                  <ProfilePage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
               path="/contests" 
               element={
                 <ProtectedRoute>

@@ -139,3 +139,37 @@ exports.sendReminders = async (req, res) => {
         res.status(500).json({ message: 'Server Error sending reminders' });
     }
 };
+
+// Get Public Profile of a User
+exports.getUserPublicProfile = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Fetch basic user details
+        const [users] = await pool.query(
+            'SELECT id, name, role, profile_image_url, created_at, is_blocked FROM users WHERE id = ?',
+            [id]
+        );
+
+        if (users.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const user = users[0];
+
+        // Fetch user's submissions
+        const [submissions] = await pool.query(`
+            SELECT s.id, s.problem_id, p.title as problem_title, s.language, s.status, s.runtime, s.submitted_at 
+            FROM submissions s
+            JOIN problems p ON s.problem_id = p.id
+            WHERE s.user_id = ? 
+            ORDER BY s.submitted_at DESC
+        `, [id]);
+
+        res.status(200).json({ user, submissions });
+
+    } catch (error) {
+        console.error("Error fetching user public profile:", error);
+        res.status(500).json({ message: 'Server Error fetching user profile' });
+    }
+};
