@@ -18,7 +18,7 @@ const router = express.Router();
 router.get('/', getProblems);
 router.get('/user-status', protect, getProblemsWithUserStatus);
 router.get('/:id', getProblemById);
-router.get('/:id/samples', protect, getSampleTestCases);
+router.get('/:id/samples', getSampleTestCases);  // public - non-hidden test cases only
 
 // Admin Routes (Protect + AdminOnly)
 router.post('/', protect, adminOnly, createProblem);

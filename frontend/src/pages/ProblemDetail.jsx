@@ -195,10 +195,9 @@ const ProblemDetail = () => {
         axios.get(`${import.meta.env.VITE_API_URL}/api/problems/${id}`)
             .then((probRes) => {
                 setProblem(probRes.data);
-                // Fetch samples separately — failure here won't hide the problem
+                // Fetch samples separately — public route, no auth needed
                 return axios.get(
-                    `${import.meta.env.VITE_API_URL}/api/problems/${id}/samples`,
-                    { headers }
+                    `${import.meta.env.VITE_API_URL}/api/problems/${id}/samples`
                 ).then((samplesRes) => {
                     setSampleCases(samplesRes.data || []);
                 }).catch(() => {
