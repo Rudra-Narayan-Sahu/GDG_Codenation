@@ -45,41 +45,41 @@ const Register = () => {
 
     return (
         <div className="flex-grow flex items-center justify-center p-4 sm:p-6">
-            <div className="glass w-full max-w-md p-6 sm:p-8 rounded-2xl">
+            <div className="glass w-full max-w-md p-7 sm:p-9 rounded-2xl border border-white/[0.06]">
                 <div className="text-center mb-8">
                     <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">Create Account</h2>
-                    <p className="text-sm sm:text-base text-gray-400">Join CodeNation and start coding</p>
+                    <p className="text-sm text-zinc-500">Join CodeNation and start coding</p>
                 </div>
                 
-                {error && <div className="bg-red-500/10 border border-red-500/50 text-red-400 p-3 rounded-md mb-6 text-sm">{error}</div>}
+                {error && <div className="bg-red-500/10 border border-red-500/30 text-red-400 p-3 rounded-lg mb-6 text-sm">{error}</div>}
 
-                <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5 mb-6">
+                <form onSubmit={handleSubmit} className="space-y-4 mb-6">
                     <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-1">Full Name</label>
+                        <label className="block text-sm font-medium text-zinc-400 mb-1.5">Full Name</label>
                         <input 
                             type="text" 
                             required
-                            className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-[#07fc03] focus:ring-1 focus:ring-[#07fc03] smooth-transition"
+                            className="w-full bg-[#09090B] border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-white/50 focus:ring-1 focus:ring-[#ffffff]/30 transition-all"
                             value={formData.name}
                             onChange={(e) => setFormData({...formData, name: e.target.value})}
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-1">Email</label>
+                        <label className="block text-sm font-medium text-zinc-400 mb-1.5">Email</label>
                         <input 
                             type="email" 
                             required
-                            className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-[#07fc03] focus:ring-1 focus:ring-[#07fc03] smooth-transition"
+                            className="w-full bg-[#09090B] border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-white/50 focus:ring-1 focus:ring-[#ffffff]/30 transition-all"
                             value={formData.email}
                             onChange={(e) => setFormData({...formData, email: e.target.value})}
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-1">Password</label>
+                        <label className="block text-sm font-medium text-zinc-400 mb-1.5">Password</label>
                         <input 
                             type="password" 
                             required
-                            className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-[#07fc03] focus:ring-1 focus:ring-[#07fc03] smooth-transition"
+                            className="w-full bg-[#09090B] border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-white/50 focus:ring-1 focus:ring-[#ffffff]/30 transition-all"
                             value={formData.password}
                             onChange={(e) => setFormData({...formData, password: e.target.value})}
                         />
@@ -87,16 +87,16 @@ const Register = () => {
                     <button 
                         type="submit" 
                         disabled={loading}
-                        className="w-full bg-[#07fc03] hover:bg-[#07fc03]/80 text-black font-semibold py-3 rounded-lg shadow-lg shadow-[#07fc03]/30 smooth-transition disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full bg-white hover:bg-[#00e085] text-[#09090B] font-semibold py-3 rounded-lg shadow-[0_0_20px_rgba(255,255,255,0.15)] hover:shadow-[0_0_28px_rgba(255,255,255,0.25)] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {loading ? 'Creating Account...' : 'Sign Up'}
                     </button>
                 </form>
 
-                <div className="flex items-center space-x-4 mb-6">
-                    <div className="flex-grow h-px bg-gray-700"></div>
-                    <span className="text-gray-500 text-sm">OR</span>
-                    <div className="flex-grow h-px bg-gray-700"></div>
+                <div className="flex items-center gap-4 mb-6">
+                    <div className="flex-grow h-px bg-white/[0.06]" />
+                    <span className="text-zinc-600 text-sm">or</span>
+                    <div className="flex-grow h-px bg-white/[0.06]" />
                 </div>
                 
                 <div className="flex justify-center flex-col items-center">
@@ -108,8 +108,8 @@ const Register = () => {
                     />
                 </div>
 
-                <p className="mt-6 text-center text-gray-400 text-sm">
-                    Already have an account? <Link to="/login" className="text-[#07fc03] hover:text-[#07fc03]/80 font-medium">Login here</Link>
+                <p className="mt-6 text-center text-zinc-500 text-sm">
+                    Already have an account? <Link to="/login" className="text-white hover:text-[#00e085] font-medium transition-colors">Login here</Link>
                 </p>
             </div>
         </div>
