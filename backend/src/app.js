@@ -55,7 +55,6 @@ app.get('/', (req, res) => {
     res.send('Backend started...');
 });
 
-// Import Routes
 const authRoutes = require('./routes/authRoutes');
 const problemRoutes = require('./routes/problemRoutes');
 const submissionRoutes = require('./routes/submissionRoutes');
